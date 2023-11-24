@@ -108,9 +108,7 @@
                     </div>
                 <?php endforeach; ?>
                 <?php } ?>
-            </div>
-            <!-- Agrega un botón de submit adicional fuera del bucle para enviar el formulario -->
-            <button type="submit" class="btn btn-primary mb-2 float-right">Ejecutar Operación</button>
+            </div>            
         </form>
 
         <script>
