@@ -6661,7 +6661,7 @@
                                         </a></div>
                                     <nav class="flex flex-wrap justify-start items-center ">
                                         <div class="relative"><button class="text-gray-50 group rounded-md inline-flex items-center text-base font-medium hover:text-gray-300 h-12 p-2 mx-2 focus:outline-none" id="headlessui-popover-button-:R36b9:" type="button" aria-expanded="false"></path>
-                                                </svg><!--/$--></button></div><a target="_self" href="http://localhost/secure/index.php/file" rel="noreferrer" class="text-gray-50 rounded-md inline-flex items-center text-base font-medium hover:text-gray-300 h-12 p-2 mx-2 focus:outline-none">Archivos</a><a class="text-gray-50 rounded-md inline-flex items-center text-base font-medium hover:text-gray-300 h-12 p-2 mx-2 focus:outline-none" href="/es/blog/">Blog</a>
+                                                </svg><!--/$--></button></div><a target="_self" href="http://localhost/EncryptoFile/index.php/file" rel="noreferrer" class="text-gray-50 rounded-md inline-flex items-center text-base font-medium hover:text-gray-300 h-12 p-2 mx-2 focus:outline-none">Archivos</a><a class="text-gray-50 rounded-md inline-flex items-center text-base font-medium hover:text-gray-300 h-12 p-2 mx-2 focus:outline-none" href="/es/blog/">Blog</a>
                                     </nav>
                                     <div class="flex flex-shrink-0 flex-grow justify-end items-center">
                                         <?php if (isset($sesion_iniciada) && $sesion_iniciada) : ?>

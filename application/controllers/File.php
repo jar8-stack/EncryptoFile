@@ -74,7 +74,7 @@ class File extends CI_Controller
             // Configuración para la carga de archivos
             $config['upload_path'] = './uploads';
             $config['allowed_types'] = '*'; // Ajusta los tipos de archivos permitidos según tus necesidades
-            $config['max_size'] = 2048; // Tamaño máximo en kilobytes
+            $config['max_size'] = 1000000; // Tamaño máximo en kilobytes
 
             $this->load->library('upload', $config);
 
@@ -167,7 +167,7 @@ class File extends CI_Controller
             // Realizar la solicitud al endpoint de encriptación para cada documento seleccionado
             foreach ($array_resultante as $documento_id) {
                 // Obtener información del documento
-                $documento = $this->obtener_informacion_documento($documento_id);
+                $documento = $this->obtener_informacion_documento($documento_id);                
 
                 // Supongamos que $documento['DatosDocumento']['data'] es el arreglo de bytes
                 $arreglo_bytes = $documento['DatosDocumento']['data'];
@@ -178,7 +178,7 @@ class File extends CI_Controller
                 // Configura las cabeceras HTTP
                 header('Content-Description: File Transfer');
                 header('Content-Type: application/octet-stream');
-                header('Content-Disposition: attachment; filename="archivo.dlse"');
+                header('Content-Disposition: attachment; filename="' . $documento['NombreDocumento'] . '.dlse"');
                 header('Expires: 0');
                 header('Cache-Control: must-revalidate');
                 header('Pragma: public');
@@ -378,11 +378,11 @@ class File extends CI_Controller
                         $decoded_data = base64_decode($datos);
 
                         // Determinar el tipo de archivo (puedes ajustar esto según tus necesidades)
-                        $tipo_archivo = 'pdf'; // ejemplo: PDF
+                        $tipo_archivo = "pdf"; // ejemplo: PDF
                         $extension = '.' . $tipo_archivo;
 
                         // Nombre del archivo
-                        $nombre_archivo = "nombre_del_archivo" . $numeral . $extension;
+                        $nombre_archivo =   $documento['NombreDocumento'] . $extension;
 
                         // Ruta del archivo
                         $ruta_archivo = "./downloads/";

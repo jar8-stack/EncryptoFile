@@ -170,7 +170,7 @@
                 // Puedes enviar el token al servidor para realizar una verificación adicional o realizar otras acciones necesarias.
                 // Por simplicidad, utilizaremos una solicitud AJAX aquí.
                 var xhr = new XMLHttpRequest();
-                xhr.open('POST', '/secure/index.php/login/handle_google_login', true);
+                xhr.open('POST', '/EncryptoFile/index.php/login/handle_google_login', true);
                 xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 
                 xhr.onreadystatechange = function() {
@@ -183,7 +183,7 @@
                             var response = JSON.parse(xhr.responseText);
                             if (response.token) {
                                 // Redirigir a la página deseada
-                                window.location.href = 'http://localhost/secure/';
+                                window.location.href = 'http://localhost/EncryptoFile/';
                             } else {
                                 // Mostrar un mensaje de error si no se obtuvo un token
                                 console.error('Error: No se obtuvo un token en la respuesta');
