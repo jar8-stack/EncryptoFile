@@ -58,6 +58,7 @@
             <button type="button" class="btn btn-primary mb-2 float-right" id="desencriptarBtn" onclick="setOperacion('descargar')">Descargar</button>
             <br>
             <div class="row">
+            <?php if(isset($documento['ID'])){ ?>
                 <?php foreach ($documentos as $documento) : ?>
                     <div class="col-md-4">
                         <div class="documento-card">
@@ -106,6 +107,7 @@
                         </div>
                     </div>
                 <?php endforeach; ?>
+                <?php } ?>
             </div>
             <!-- Agrega un botón de submit adicional fuera del bucle para enviar el formulario -->
             <button type="submit" class="btn btn-primary mb-2 float-right">Ejecutar Operación</button>
