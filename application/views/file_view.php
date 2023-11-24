@@ -55,6 +55,7 @@
             <input type="hidden" name="values_files" id="values_files" value="">
             <button type="button" class="btn btn-primary mb-2 float-right" id="encriptarBtn" onclick="setOperacion('encriptar')">Encriptar</button>
             <button type="button" class="btn btn-primary mb-2 float-right" id="desencriptarBtn" onclick="setOperacion('desencriptar')">Desencriptar</button>
+            <button type="button" class="btn btn-primary mb-2 float-right" id="desencriptarBtn" onclick="setOperacion('descargar')">Descargar</button>
             <br>
             <div class="row">
                 <?php foreach ($documentos as $documento) : ?>
@@ -76,6 +77,21 @@
                                 case 'DOCX':
                                     $iconClass = 'https://cdn.icon-icons.com/icons2/112/PNG/512/word_18896.png';
                                     break;
+                                case 'PNG':
+                                    $iconClass = 'https://cdn-icons-png.flaticon.com/512/2694/2694755.png';
+                                    break;
+                                case 'JPG':
+                                    $iconClass = 'https://cdn-icons-png.flaticon.com/512/2694/2694755.png';
+                                    break;
+                                case 'JPEG':
+                                    $iconClass = 'https://cdn-icons-png.flaticon.com/512/2694/2694755.png';
+                                    break;
+                                case 'GIF':
+                                    $iconClass = 'https://cdn-icons-png.flaticon.com/512/2694/2694755.png';
+                                    break;
+                                case 'TXT':
+                                    $iconClass = 'https://cdn-icons-png.flaticon.com/512/2694/2694755.png';
+                                    break;
                                     // Agrega más casos según los tipos de archivos que desees manejar
                                 default:
                                     $iconClass = 'https://icones.pro/wp-content/uploads/2021/06/icone-fichier-document-noir.png'; // Icono genérico si no se encuentra el tipo de archivo
@@ -83,7 +99,7 @@
                             }
                             ?>
                             <img src="<?= $iconClass ?>" alt="" height="200px" width="200px">
-                            <h4><?= $documento['NombreDocumento'] ?></h4>
+                            <h4 style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"><?= $documento['NombreDocumento'] ?></h4>
                             <p>Tipo de Documento: <?= $documento['TipoDocumento'] ?></p>
                             <p>Datos del Documento: <?= $documento['DatosDocumento']['type'] ?></p>
                             <p>Fecha de Carga: <?= $documento['FechaCarga'] ?></p>
@@ -96,7 +112,7 @@
         </form>
 
         <script>
-            function setOperacion(operacion) {            
+            function setOperacion(operacion) {
                 // Obtener todos los checkbox
                 var checkboxes = document.querySelectorAll('.documentoCheckbox');
 

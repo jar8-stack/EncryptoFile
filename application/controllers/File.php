@@ -73,7 +73,7 @@ class File extends CI_Controller
         if ($sesion_iniciada !== false) {
             // Configuración para la carga de archivos
             $config['upload_path'] = './uploads';
-            $config['allowed_types'] = 'pdf|doc|docx'; // Ajusta los tipos de archivos permitidos según tus necesidades
+            $config['allowed_types'] = '*'; // Ajusta los tipos de archivos permitidos según tus necesidades
             $config['max_size'] = 2048; // Tamaño máximo en kilobytes
 
             $this->load->library('upload', $config);
@@ -114,7 +114,7 @@ class File extends CI_Controller
                 $response = curl_exec($curl);
 
                 curl_close($curl);
-                
+
 
                 $this->index();
             } else {
@@ -140,11 +140,58 @@ class File extends CI_Controller
             case 'desencriptar':
                 $this->desencriptar_documentos();
                 break;
+            case 'descargar':
+                $this->descargar_documentos();
+                break;
             default:
                 // Manejar un caso por defecto o mostrar un error
                 break;
         }
     }
+
+    public function descargar_documentos()
+    {
+        $documentos_seleccionados = $this->input->post('values_files');
+
+        // Usar explode para convertir la cadena en un array
+        $array_resultante = explode(',', $documentos_seleccionados);
+
+        // Cargar el driver de cache
+        $this->load->driver('cache');
+
+        // Obtener el sesion_iniciada desde la cache
+        $sesion_iniciada = $this->cache->file->get('sesion_iniciada');
+
+        // Verificar si el sesion_iniciada se encontró en la cache
+        if ($sesion_iniciada !== false) {
+            // Realizar la solicitud al endpoint de encriptación para cada documento seleccionado
+            foreach ($array_resultante as $documento_id) {
+                // Obtener información del documento
+                $documento = $this->obtener_informacion_documento($documento_id);
+
+                // Supongamos que $documento['DatosDocumento']['data'] es el arreglo de bytes
+                $arreglo_bytes = $documento['DatosDocumento']['data'];
+
+                // Convierte el arreglo de bytes a base64
+                $base64_data = base64_encode(implode('', $arreglo_bytes));
+
+                // Configura las cabeceras HTTP
+                header('Content-Description: File Transfer');
+                header('Content-Type: application/octet-stream');
+                header('Content-Disposition: attachment; filename="archivo.dlse"');
+                header('Expires: 0');
+                header('Cache-Control: must-revalidate');
+                header('Pragma: public');
+
+                // Devuelve la cadena base64 como parte del contenido de la respuesta HTTP
+                echo $base64_data;
+            }
+        } else {
+            // El usuario no tiene sesión iniciada, maneja el error según tus necesidades
+            echo "Error al iniciar sesión.";
+        }
+    }
+
 
     public function encriptar_documentos()
     {
