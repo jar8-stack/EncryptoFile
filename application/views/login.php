@@ -58,7 +58,7 @@
                                     </form>
 
                                     <div class="text right-container">
-                                        <div style="display: block"><a href="javascript:void(0);" id="passRestorelink">¿Has olvidado la contraseña?</a></div>
+                                        <div style="display: block"><a href="javascript:void(0);" id="passRestorelink">No estas registrado?</a></div>
                                     </div>
                                 </div>
 
@@ -74,28 +74,76 @@
                                 <div class="text social">
                                     <span>Entrar con</span>
 
+                                    <center>
+                                        <div class="box">
+                                            <!-- Agrega tus scripts JavaScript -->
+                                            <script>
+                                                // Define la función handleCredentialResponse
+                                                function handleCredentialResponse(response) {
+                                                    if (response.credential) {
+                                                        // El inicio de sesión fue exitoso
+                                                        console.log('Inicio de sesión exitoso:', response);
 
-                                    <div class="accountLinks">
-                                        <ul>
+                                                        // Acciones adicionales después del inicio de sesión exitoso
+                                                        getUserInfo(response.credential); // Llamamos a una función para obtener información del usuario
+                                                    } else {
+                                                        // Hubo un problema con el inicio de sesión
+                                                        console.error('Error en el inicio de sesión:', response);
+                                                    }
+                                                }
 
-                                            <li>
-                                                <a href="<?php echo site_url('login/google_login'); ?>" class="popup google">
-                                                    <span class="icon"></span>
+                                                // Función para obtener información del usuario
+                                                function getUserInfo(credential) {
+                                                    // Lógica para obtener información del usuario usando el token de credencial
+                                                    // Puedes enviar el token al servidor para realizar una verificación adicional o realizar otras acciones necesarias.
+                                                    // Por simplicidad, utilizaremos una solicitud AJAX aquí.
+                                                    var xhr = new XMLHttpRequest();
+                                                    xhr.open('POST', '/EncryptoFile/index.php/login/handle_google_login', true);
+                                                    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 
-                                                    <span class="provider-text">Google</span>
+                                                    xhr.onreadystatechange = function() {
+                                                        if (xhr.readyState == 4) {
+                                                            if (xhr.status == 200) {
+                                                                // La solicitud fue exitosa
+                                                                console.log('Respuesta del servidor:', xhr.responseText);
 
-                                                </a>
-                                            </li>
+                                                                // Verificar si la respuesta contiene un token
+                                                                var response = JSON.parse(xhr.responseText);
+                                                                if (response.token) {
+                                                                    // Redirigir a la página deseada
+                                                                    window.location.href = 'http://localhost/EncryptoFile/index.php/file';
+                                                                } else {
+                                                                    // Mostrar un mensaje de error si no se obtuvo un token
+                                                                    console.error('Error: No se obtuvo un token en la respuesta');
+                                                                }
+                                                            } else {
+                                                                // Mostrar un mensaje de error si la solicitud no fue exitosa
+                                                                console.error('Error en la solicitud. Código de estado:', xhr.status);
+                                                            }
+                                                        }
+                                                    };
 
 
-                                        </ul>
-                                    </div>
+                                                    var params = 'credential=' + encodeURIComponent(credential);
+                                                    xhr.send(params);
+                                                }
+                                            </script>
+
+                                            <!-- Agrega la biblioteca GSI -->
+                                            <script src="https://accounts.google.com/gsi/client" async defer></script>
+
+                                            <!-- Configuración del botón de inicio de sesión de Google -->
+                                            <div id="g_id_onload" data-client_id="<?php echo $clientId; ?>" data-callback="handleCredentialResponse"></div>
+                                            <div class="g_id_signin" data-type="standard"></div>
+
+
+
+                                        </div>
+                                    </center>
 
                                 </div>
-
                             </div>
                         </div>
+                        <div class="clearFix"></div>
                     </div>
-                    <div class="clearFix"></div>
                 </div>
-            </div>

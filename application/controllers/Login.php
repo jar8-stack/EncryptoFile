@@ -12,7 +12,12 @@ class Login extends CI_Controller
 
 	public function index()
 	{
-		$this->load->view('login');
+		$jsonConfigPath = APPPATH . 'config/google_client_secret.json';
+		$jsonConfig = json_decode(file_get_contents($jsonConfigPath), true);
+
+		$clientId = $jsonConfig['web']['client_id'];
+		$data['clientId'] = $clientId;
+		$this->load->view('login', $data);
 	}
 
 
@@ -32,6 +37,7 @@ class Login extends CI_Controller
 		// Obtén el token de la solicitud POST
 		$token = $this->input->post('credential');
 
+
 		// Llama a la función para verificar el token
 		$userInfo = $this->verifyGoogleToken($token);
 
@@ -45,7 +51,6 @@ class Login extends CI_Controller
 				"correo" => $userInfo['email'],
 				"contrasena" => "Secret1olo1",
 				"nombreCompleto" => $userInfo['name'],
-				"fechaNacimiento" => "1990-01-01",
 				"genero" => "Masculino",
 				"telefono" => "1234567890",
 				"nombreUsuario" => $userInfo['given_name'],
@@ -86,9 +91,19 @@ class Login extends CI_Controller
 					echo "<script>console.log('Error al iniciar sesión');</script>";
 				}
 				echo json_encode($data);
+
+				$userPic = $userInfo['picture'];
+				// Guardar la URL de la imagen en la caché
+				$this->load->driver('cache');
+				$this->cache->file->save('user_picture', $userPic, 86400);
+				$this->cache->file->save('name', $userInfo['name'], 86400);
 			} else {
 				// Verificar si se obtuvo un token			
 				if (isset($data['token'])) {
+					$userPic = $userInfo['picture'];
+					// Guardar la URL de la imagen en la caché
+					$this->load->driver('cache');
+					$this->cache->file->save('user_picture', $userPic, 86400);
 					// Almacenar el token en la cache
 					$this->load->driver('cache');
 					$this->cache->file->save('sesion_iniciada', $data['token'], 86400); // Caducidad en segundos (24 horas)														
@@ -141,6 +156,7 @@ class Login extends CI_Controller
 				'name' => $tokenInfo['name'],
 				'given_name' => $tokenInfo['given_name'],
 				'kid' => $tokenInfo['kid'],
+				'picture' => $tokenInfo['picture'],
 				// Otros campos que puedas necesitar
 			);
 		} else {
@@ -182,7 +198,7 @@ class Login extends CI_Controller
 			$this->cache->file->save('sesion_iniciada', $data['token'], 86400); // Caducidad en segundos (24 horas)
 
 			// Redireccionar a la página deseada
-			redirect('home'); // Cambia 'dashboard' por la página a la que deseas redirigir después del login
+			redirect('file'); // Cambia 'dashboard' por la página a la que deseas redirigir después del login
 		} else {
 			// Mostrar un mensaje de error en un alert
 			echo "<script>alert('Error al iniciar sesión');</script>";
@@ -196,6 +212,7 @@ class Login extends CI_Controller
 	{
 		// Borrar la cache
 		$this->cache->file->delete('sesion_iniciada');
+		$this->cache->file->delete('user_picture');
 
 		// Redireccionar al index del controlador Home
 		redirect('home');

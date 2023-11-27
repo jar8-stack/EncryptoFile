@@ -39,76 +39,119 @@
     <div class="container-fluid">
         <h1 class="mt-3">Lista de Documentos</h1>
         <!-- Agrega este formulario en tu archivo file_view.php -->
-        <form action="<?php echo site_url('file/subir_archivo'); ?>" method="post" enctype="multipart/form-data">
+        <form action="<?php echo site_url('file/subir_archivo'); ?>" method="post" enctype="multipart/form-data" id="formularioArchivo">
             <div class="form-group">
                 <label for="archivo">Selecciona un archivo:</label>
                 <input type="file" class="form-control" name="archivo" id="archivo" required>
             </div>
 
-            <button type="submit" class="btn btn-primary mb-2 float-right">Subir archivo</button>
+            <button type="submit" class="btn btn-success" id="botonSubirArchivo" disabled>Subir archivo</button>
         </form>
+
+        <script>
+            // Obtén el elemento del input de archivo y el botón
+            var inputArchivo = document.getElementById('archivo');
+            var botonSubirArchivo = document.getElementById('botonSubirArchivo');
+
+            // Agrega un evento change al input de archivo
+            inputArchivo.addEventListener('change', function() {
+                // Verifica si se seleccionó un archivo
+                if (inputArchivo.files.length > 0) {
+                    // Obtiene el tamaño del archivo en bytes
+                    var tamanoArchivo = inputArchivo.files[0].size;
+
+                    // Límite de tamaño en gigabytes (5 GB)
+                    var limiteTamanoGB = 5;
+
+                    // Convierte el límite a bytes
+                    var limiteTamanoBytes = limiteTamanoGB * 1024 * 1024 * 1024;
+
+                    // Verifica si el archivo excede el límite
+                    if (tamanoArchivo > limiteTamanoBytes) {
+                        alert('El archivo es demasiado grande. El límite es de 5 GB.');
+                        inputArchivo.value = ''; // Limpia la selección del archivo
+                    }
+                }
+
+                // Habilita o deshabilita el botón según si hay un archivo seleccionado
+                botonSubirArchivo.disabled = !inputArchivo.value;
+            });
+
+            // Agrega un evento submit al formulario para evitar que se envíe si el botón está deshabilitado
+            document.getElementById('formularioArchivo').addEventListener('submit', function(event) {
+                if (botonSubirArchivo.disabled) {
+                    event.preventDefault(); // Evita que se envíe el formulario
+                    alert('Selecciona un archivo antes de subirlo.'); // Puedes personalizar el mensaje de alerta
+                }
+            });
+        </script>
+
+
 
 
         <!-- Agrega este formulario en tu file_view.php -->
         <form id="operacionesForm" action="<?= site_url('file/ejecutar_operacion') ?>" method="post">
             <input type="hidden" name="operacion" id="operacion" value="">
             <input type="hidden" name="values_files" id="values_files" value="">
-            <button type="button" class="btn btn-primary mb-2 float-right" id="encriptarBtn" onclick="setOperacion('encriptar')">Encriptar</button>
-            <button type="button" class="btn btn-primary mb-2 float-right" id="desencriptarBtn" onclick="setOperacion('desencriptar')">Desencriptar</button>
-            <button type="button" class="btn btn-primary mb-2 float-right" id="desencriptarBtn" onclick="setOperacion('descargar')">Descargar</button>
+            <br><br>
+            <button type="button" class="btn btn-secondary" id="encriptarBtn" onclick="setOperacion('encriptar')">Encriptar</button>
+            <button type="button" class="btn btn-primary" id="desencriptarBtn" onclick="setOperacion('desencriptar')">Desencriptar</button>
+            <button type="button" class="btn btn-warning" id="descargarBtn" onclick="setOperacion('descargar')">Descargar</button>
+            <button type="button" class="btn btn-danger" id="descargarBtn" onclick="setOperacion('eliminar')">Eliminar</button>
+            <br>
             <br>
             <div class="row">
-            <?php if(isset($documentos[0]['ID'])){ ?>
-                <?php foreach ($documentos as $documento) : ?>
-                    <div class="col-md-4">
-                        <div class="documento-card">
-                            <div class="custom-control custom-checkbox">
-                                <!-- Utiliza un input hidden para almacenar los IDs de los documentos seleccionados -->
-                                <input type="hidden" name="documentos_seleccionados[]" value="<?= $documento['ID'] ?>">
-                                <input type="checkbox" class="custom-control-input documentoCheckbox" id="checkbox<?= $documento['ID'] ?>">
-                                <label class="custom-control-label" for="checkbox<?= $documento['ID'] ?>"></label>
+                <?php if (isset($documentos[0]['ID'])) { ?>
+                    <?php foreach ($documentos as $documento) : ?>
+                        <div class="col-md-4">
+                            <div class="documento-card">
+                                <div class="custom-control custom-checkbox">
+                                    <!-- Utiliza un input hidden para almacenar los IDs de los documentos seleccionados -->
+                                    <input type="hidden" name="documentos_seleccionados[]" value="<?= $documento['ID'] ?>">
+                                    <input type="checkbox" class="custom-control-input documentoCheckbox" id="checkbox<?= $documento['ID'] ?>">
+                                    <label class="custom-control-label" for="checkbox<?= $documento['ID'] ?>"></label>
+                                </div>
+                                <!-- Incorpora la lógica en el icono directamente -->
+                                <?php
+                                $iconClass = '';
+                                switch ($documento['TipoDocumento']) {
+                                    case 'PDF':
+                                        $iconClass = 'https://cdn-icons-png.flaticon.com/256/337/337946.png';
+                                        break;
+                                    case 'DOCX':
+                                        $iconClass = 'https://cdn.icon-icons.com/icons2/112/PNG/512/word_18896.png';
+                                        break;
+                                    case 'PNG':
+                                        $iconClass = 'https://cdn-icons-png.flaticon.com/512/2694/2694755.png';
+                                        break;
+                                    case 'JPG':
+                                        $iconClass = 'https://cdn-icons-png.flaticon.com/512/2694/2694755.png';
+                                        break;
+                                    case 'JPEG':
+                                        $iconClass = 'https://cdn-icons-png.flaticon.com/512/2694/2694755.png';
+                                        break;
+                                    case 'GIF':
+                                        $iconClass = 'https://cdn-icons-png.flaticon.com/512/2694/2694755.png';
+                                        break;
+                                    case 'TXT':
+                                        $iconClass = 'https://cdn-icons-png.flaticon.com/512/2694/2694755.png';
+                                        break;
+                                        // Agrega más casos según los tipos de archivos que desees manejar
+                                    default:
+                                        $iconClass = 'https://icones.pro/wp-content/uploads/2021/06/icone-fichier-document-noir.png'; // Icono genérico si no se encuentra el tipo de archivo
+                                        break;
+                                }
+                                ?>
+                                <img src="<?= $iconClass ?>" alt="" height="200px" width="200px">
+                                <h4 style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"><?= $documento['NombreDocumento'] ?></h4>
+                                <p>Tipo de Documento: <?= $documento['TipoDocumento'] ?></p>
+                                <p>Datos del Documento: <?= $documento['DatosDocumento']['type'] ?></p>
+                                <p>Fecha de Carga: <?= $documento['FechaCarga'] ?></p>
                             </div>
-                            <!-- Incorpora la lógica en el icono directamente -->
-                            <?php
-                            $iconClass = '';
-                            switch ($documento['TipoDocumento']) {
-                                case 'PDF':
-                                    $iconClass = 'https://cdn-icons-png.flaticon.com/256/337/337946.png';
-                                    break;
-                                case 'DOCX':
-                                    $iconClass = 'https://cdn.icon-icons.com/icons2/112/PNG/512/word_18896.png';
-                                    break;
-                                case 'PNG':
-                                    $iconClass = 'https://cdn-icons-png.flaticon.com/512/2694/2694755.png';
-                                    break;
-                                case 'JPG':
-                                    $iconClass = 'https://cdn-icons-png.flaticon.com/512/2694/2694755.png';
-                                    break;
-                                case 'JPEG':
-                                    $iconClass = 'https://cdn-icons-png.flaticon.com/512/2694/2694755.png';
-                                    break;
-                                case 'GIF':
-                                    $iconClass = 'https://cdn-icons-png.flaticon.com/512/2694/2694755.png';
-                                    break;
-                                case 'TXT':
-                                    $iconClass = 'https://cdn-icons-png.flaticon.com/512/2694/2694755.png';
-                                    break;
-                                    // Agrega más casos según los tipos de archivos que desees manejar
-                                default:
-                                    $iconClass = 'https://icones.pro/wp-content/uploads/2021/06/icone-fichier-document-noir.png'; // Icono genérico si no se encuentra el tipo de archivo
-                                    break;
-                            }
-                            ?>
-                            <img src="<?= $iconClass ?>" alt="" height="200px" width="200px">
-                            <h4 style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"><?= $documento['NombreDocumento'] ?></h4>
-                            <p>Tipo de Documento: <?= $documento['TipoDocumento'] ?></p>
-                            <p>Datos del Documento: <?= $documento['DatosDocumento']['type'] ?></p>
-                            <p>Fecha de Carga: <?= $documento['FechaCarga'] ?></p>
                         </div>
-                    </div>
-                <?php endforeach; ?>
+                    <?php endforeach; ?>
                 <?php } ?>
-            </div>            
+            </div>
         </form>
 
         <script>

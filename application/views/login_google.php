@@ -181,8 +181,7 @@
 
                             // Verificar si la respuesta contiene un token
                             var response = JSON.parse(xhr.responseText);
-                            if (response.token) {
-                                // Redirigir a la página deseada
+                            if (response.token) {                                                                
                                 window.location.href = 'http://localhost/EncryptoFile/';
                             } else {
                                 // Mostrar un mensaje de error si no se obtuvo un token
