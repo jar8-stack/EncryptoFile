@@ -58,7 +58,7 @@
                                     </form>
 
                                     <div class="text right-container">
-                                        <div style="display: block"><a href="javascript:void(0);" id="passRestorelink">No estas registrado?</a></div>
+                                        <div style="display: block"><a href="<?php echo base_url('index.php/registro'); ?>" id="passRestorelink">No estas registrado?</a></div>
                                     </div>
                                 </div>
 

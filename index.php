@@ -63,6 +63,10 @@
  * Different environments will require different levels of error reporting.
  * By default development will show errors but testing and live will hide them.
  */
+
+ ini_set('memory_limit', '5120M');
+
+
 switch (ENVIRONMENT)
 {
 	case 'development':

@@ -74,7 +74,7 @@ class File extends CI_Controller
             // Configuración para la carga de archivos
             $config['upload_path'] = './uploads';
             $config['allowed_types'] = '*'; // Ajusta los tipos de archivos permitidos según tus necesidades
-            $config['max_size'] = 1000000; // Tamaño máximo en kilobytes
+            $config['max_size'] = 1000000000000000000; // Tamaño máximo en kilobytes
 
             $this->load->library('upload', $config);
 
