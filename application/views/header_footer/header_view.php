@@ -6670,7 +6670,8 @@
                                             $this->load->driver('cache');
                                             $userPic = $this->cache->file->get('user_picture');
                                             $name = $this->cache->file->get('name');
-                                            ?>                                            
+                                            ?>
+                                            <a target="_self" href="<?php echo site_url('login/updateFacial_view'); ?>" class="text-gray-50 rounded-md inline-flex items-center text-base font-medium hover:text-gray-300 h-12 p-2 mx-2 focus:outline-none" rel="noreferrer">Cambiar foto de perfil</a>                                                        
                                             <a target="_self" href="<?php echo site_url('login/cerrarSesion'); ?>" class="text-gray-50 rounded-md inline-flex items-center text-base font-medium hover:text-gray-300 h-12 p-2 mx-2 focus:outline-none" rel="noreferrer">Cerrar sesión</a>
                                             <!-- Mostrar la imagen en un elemento <img> con clases para darle formato -->
                                             <img src="<?= $userPic ?>" alt="User Picture" class="rounded-full h-10 w-10">

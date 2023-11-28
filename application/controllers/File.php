@@ -89,6 +89,8 @@ class File extends CI_Controller
                 // Convierte la cadena a un arreglo de bytes
                 $bytesArray = unpack('C*', $fileContent);
 
+                echo json_encode($bytesArray);
+
                 // Supongamos que $bytesArray es el arreglo de bytes que obtuviste
                 $base64String = base64_encode(implode(array_map("chr", $bytesArray)));
 
@@ -231,22 +233,32 @@ class File extends CI_Controller
                 // Obtener información del documento
                 $documento = $this->obtener_informacion_documento($documento_id);
 
-                // Supongamos que $documento['DatosDocumento']['data'] es el arreglo de bytes
-                $arreglo_bytes = $documento['DatosDocumento']['data'];
+                if ($documento['TipoDocumento'] == "DLSE") {
+                    // Supongamos que $documento['DatosDocumento']['data'] es el arreglo de bytes
+                    $arreglo_bytes = $documento['DatosDocumento']['data'];
 
-                // Convierte el arreglo de bytes a base64
-                $base64_data = base64_encode(implode('', $arreglo_bytes));
+                    // Convierte el arreglo de bytes a base64
+                    $base64_data = base64_encode(implode('', $arreglo_bytes));
 
-                // Configura las cabeceras HTTP
-                header('Content-Description: File Transfer');
-                header('Content-Type: application/octet-stream');
-                header('Content-Disposition: attachment; filename="' . $documento['NombreDocumento'] . '.dlse"');
-                header('Expires: 0');
-                header('Cache-Control: must-revalidate');
-                header('Pragma: public');
+                    // Configura las cabeceras HTTP
+                    header('Content-Description: File Transfer');
+                    header('Content-Type: application/octet-stream');
+                    header('Content-Disposition: attachment; filename="' . $documento['NombreDocumento'] . '.dlse"');
+                    header('Expires: 0');
+                    header('Cache-Control: must-revalidate');
+                    header('Pragma: public');
 
-                // Devuelve la cadena base64 como parte del contenido de la respuesta HTTP
-                echo $base64_data;
+                    // Devuelve la cadena base64 como parte del contenido de la respuesta HTTP
+                    echo $base64_data;
+                } else {
+                    // Supongamos que tienes una variable $mensaje que deseas imprimir en la consola
+                    $mensaje = "Documento no encriptado";
+
+                    // Imprime en la consola del navegador
+                    echo "<script>alert('$mensaje');</script>";
+
+                    redirect('file');
+                }
             }
         } else {
             // El usuario no tiene sesión iniciada, maneja el error según tus necesidades
@@ -275,76 +287,86 @@ class File extends CI_Controller
                 // Obtener información del documento
                 $documento = $this->obtener_informacion_documento($documento_id);
 
-                // Supongamos que $documento['DatosDocumento']['data'] es el arreglo de bytes
-                $arreglo_bytes = $documento['DatosDocumento']['data'];
+                if ($documento['TipoDocumento'] != "DLSE") {
+                    // Supongamos que $documento['DatosDocumento']['data'] es el arreglo de bytes
+                    $arreglo_bytes = $documento['DatosDocumento']['data'];
 
-                // Convertir el arreglo de bytes a una cadena
-                $cadena_bytes = implode('', array_map('chr', $arreglo_bytes));
+                    // Convertir el arreglo de bytes a una cadena
+                    $cadena_bytes = implode('', array_map('chr', $arreglo_bytes));
 
-                // Convertir la cadena a formato Base64
-                $base64_string = base64_encode($cadena_bytes);
+                    // Convertir la cadena a formato Base64
+                    $base64_string = base64_encode($cadena_bytes);
 
-                // Ahora $base64_string contiene la representación en formato Base64 de los bytes
+                    // Ahora $base64_string contiene la representación en formato Base64 de los bytes
 
 
-                if ($documento !== false) {
-                    // Datos para la solicitud al endpoint de encriptación
-                    $datos_encriptacion = array(
-                        "nombre_documento" => $documento['NombreDocumento'],
-                        "documento" => $base64_string,
-                        "claveDeEncriptacion" => "TuClaveSecreta",
-                        "FechaCarga" => date('Y-m-d H:i:s')
-                    );
+                    if ($documento !== false) {
+                        // Datos para la solicitud al endpoint de encriptación
+                        $datos_encriptacion = array(
+                            "nombre_documento" => $documento['NombreDocumento'],
+                            "documento" => $base64_string,
+                            "claveDeEncriptacion" => "TuClaveSecreta",
+                            "FechaCarga" => date('Y-m-d H:i:s')
+                        );
 
-                    // Realizar la solicitud al endpoint de encriptación
-                    $curl = curl_init();
-                    curl_setopt_array($curl, array(
-                        CURLOPT_URL => 'http://localhost:8080/api/encriptar',
-                        CURLOPT_RETURNTRANSFER => true,
-                        CURLOPT_ENCODING => '',
-                        CURLOPT_MAXREDIRS => 10,
-                        CURLOPT_TIMEOUT => 0,
-                        CURLOPT_FOLLOWLOCATION => true,
-                        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                        CURLOPT_CUSTOMREQUEST => 'POST',
-                        CURLOPT_POSTFIELDS => json_encode($datos_encriptacion),
-                        CURLOPT_HTTPHEADER => array(
-                            'Authorization: ' . $sesion_iniciada,
-                            'Content-Type: application/json',
-                            'Cookie: connect.sid=s%3AfXR3y1Bb2d9V3eUVh5XI7JmK0AZialdD.3v6rFoXU6cCroQmyPAHY%2B44tic7RYRamlxdETKcDl5g'
-                        ),
-                    ));
+                        // Realizar la solicitud al endpoint de encriptación
+                        $curl = curl_init();
+                        curl_setopt_array($curl, array(
+                            CURLOPT_URL => 'http://localhost:8080/api/encriptar',
+                            CURLOPT_RETURNTRANSFER => true,
+                            CURLOPT_ENCODING => '',
+                            CURLOPT_MAXREDIRS => 10,
+                            CURLOPT_TIMEOUT => 0,
+                            CURLOPT_FOLLOWLOCATION => true,
+                            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                            CURLOPT_CUSTOMREQUEST => 'POST',
+                            CURLOPT_POSTFIELDS => json_encode($datos_encriptacion),
+                            CURLOPT_HTTPHEADER => array(
+                                'Authorization: ' . $sesion_iniciada,
+                                'Content-Type: application/json',
+                                'Cookie: connect.sid=s%3AfXR3y1Bb2d9V3eUVh5XI7JmK0AZialdD.3v6rFoXU6cCroQmyPAHY%2B44tic7RYRamlxdETKcDl5g'
+                            ),
+                        ));
 
-                    $response = curl_exec($curl);
+                        $response = curl_exec($curl);
 
-                    curl_close($curl);
+                        curl_close($curl);
 
-                    $curl = curl_init();
+                        $curl = curl_init();
 
-                    curl_setopt_array($curl, array(
-                        CURLOPT_URL => 'http://localhost:8080/api/eliminar_documento',
-                        CURLOPT_RETURNTRANSFER => true,
-                        CURLOPT_ENCODING => '',
-                        CURLOPT_MAXREDIRS => 10,
-                        CURLOPT_TIMEOUT => 0,
-                        CURLOPT_FOLLOWLOCATION => true,
-                        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                        CURLOPT_CUSTOMREQUEST => 'POST',
-                        CURLOPT_POSTFIELDS => '{
+                        curl_setopt_array($curl, array(
+                            CURLOPT_URL => 'http://localhost:8080/api/eliminar_documento',
+                            CURLOPT_RETURNTRANSFER => true,
+                            CURLOPT_ENCODING => '',
+                            CURLOPT_MAXREDIRS => 10,
+                            CURLOPT_TIMEOUT => 0,
+                            CURLOPT_FOLLOWLOCATION => true,
+                            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                            CURLOPT_CUSTOMREQUEST => 'POST',
+                            CURLOPT_POSTFIELDS => '{
                         "documentoId": ' . $documento_id . '
                     }',
-                        CURLOPT_HTTPHEADER => array(
-                            'Content-Type: application/json',
-                            'Cookie: connect.sid=s%3AK91qgf6xYXVUHlUUI8cCWFb_SvyTUSZg.r5VAQiesFxncctvapTecE6zZmpVuUvX0%2BLLBzXPIeF4'
-                        ),
-                    ));
+                            CURLOPT_HTTPHEADER => array(
+                                'Content-Type: application/json',
+                                'Cookie: connect.sid=s%3AK91qgf6xYXVUHlUUI8cCWFb_SvyTUSZg.r5VAQiesFxncctvapTecE6zZmpVuUvX0%2BLLBzXPIeF4'
+                            ),
+                        ));
 
-                    $response = curl_exec($curl);
+                        $response = curl_exec($curl);
 
-                    curl_close($curl);
+                        curl_close($curl);
 
-                    // Manejar la respuesta del servidor según sea necesario                    
-                    $this->index();
+                        // Manejar la respuesta del servidor según sea necesario                    
+                        $this->index();
+                    }
+                } else {
+                    // Supongamos que tienes una variable $mensaje que deseas imprimir en la consola
+                    $mensaje = "Documento ya encriptado";
+
+                    // Imprime en la consola del navegador
+                    echo "<script>alert('$mensaje');</script>";
+
+                    redirect('file');
                 }
             }
         } else {
@@ -440,6 +462,58 @@ class File extends CI_Controller
             return 'mp4';
         }
 
+        if (
+            isset($bytesArray[1], $bytesArray[2], $bytesArray[3], $bytesArray[4]) &&
+            $bytesArray[1] === 26 && $bytesArray[2] === 69 && $bytesArray[3] === 223 && $bytesArray[4] === 163
+        ) {
+            return 'mp3';
+        }
+
+        // Comprobamos si los primeros cuatro bytes corresponden a la firma de un archivo DOCX
+        if (
+            isset($bytesArray[1], $bytesArray[2], $bytesArray[3], $bytesArray[4]) &&
+            $bytesArray[1] === 80 && $bytesArray[2] === 75 && $bytesArray[3] === 3 && $bytesArray[4] === 4
+        ) {
+            return 'docx';
+        }
+
+        // Comprobamos si los primeros cuatro bytes corresponden a la firma de un archivo XLSX
+        if (
+            isset($bytesArray[1], $bytesArray[2], $bytesArray[3], $bytesArray[4]) &&
+            $bytesArray[1] === 80 && $bytesArray[2] === 75 && $bytesArray[3] === 3 && $bytesArray[4] === 4
+        ) {
+            return 'xlsx';
+        }
+
+        // Comprobamos si los primeros cuatro bytes corresponden a la firma de un archivo CSV
+        if (
+            isset($bytesArray[1], $bytesArray[2], $bytesArray[3], $bytesArray[4]) &&
+            $bytesArray[1] === 82 && $bytesArray[2] === 101 && $bytesArray[3] === 113 && $bytesArray[4] === 117
+        ) {
+            return 'csv';
+        }
+
+        // Comprobamos si los primeros cuatro bytes corresponden a la firma de un archivo PPTX
+        if (
+            isset($bytesArray[1], $bytesArray[2], $bytesArray[3], $bytesArray[4]) &&
+            $bytesArray[1] === 80 && $bytesArray[2] === 75 && $bytesArray[3] === 3 && $bytesArray[4] === 4
+        ) {
+            return 'pptx';
+        }
+
+        // Comprobamos si los primeros cuatro bytes corresponden a la firma de un archivo JPG
+        if (
+            isset($bytesArray[1], $bytesArray[2], $bytesArray[3], $bytesArray[4]) &&
+            $bytesArray[1] === 255 && $bytesArray[2] === 216 && $bytesArray[3] === 255 && $bytesArray[4] === 224
+        ) {
+            return 'jpg';
+        }
+
+
+
+
+
+
         // Puedes agregar más comprobaciones para otros formatos de archivo aquí
 
         // Si no se encuentra ninguna coincidencia, devolvemos un tipo de archivo genérico
@@ -526,7 +600,7 @@ class File extends CI_Controller
 
                             // Establece las cabeceras para la descarga
                             header("Content-type: application/octet-stream");
-                            header("Content-Disposition: attachment; filename=".$nombre_archivo.$extension);
+                            header("Content-Disposition: attachment; filename=" . $nombre_archivo . $extension);
 
                             // Realiza la descarga del archivo
                             readfile($url);

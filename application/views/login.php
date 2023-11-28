@@ -73,7 +73,6 @@
 
                                 <div class="text social">
                                     <span>Entrar con</span>
-
                                     <center>
                                         <div class="box">
                                             <!-- Agrega tus scripts JavaScript -->
@@ -140,6 +139,9 @@
 
                                         </div>
                                     </center>
+                                    <div class="text right-container">
+                                        <div style="display: block"><a href="<?php echo base_url('index.php/login/login_facial_view'); ?>" id="passRestorelink">Ingresar con reconocimiento facial</a></div>
+                                    </div>
 
                                 </div>
                             </div>

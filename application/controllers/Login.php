@@ -20,6 +20,73 @@ class Login extends CI_Controller
 		$this->load->view('login', $data);
 	}
 
+	public function login_facial_view()
+	{
+		$this->load->view('login_facial');
+	}
+
+	public function loginFacial()
+	{
+		// Obtener datos de la solicitud POST
+		$email = $this->input->post('email');
+		$base64String = $this->input->post('base64String');
+
+		// Realizar la solicitud al servidor de reconocimiento facial
+		$response = $this->callRecognitionServer($email, $base64String);
+
+		// Decodificar la respuesta JSON
+		$data = json_decode($response, true);
+
+		// Verificar si se obtuvo un token
+		if (isset($data['token'])) {
+			// Almacenar el token en la cache
+			$this->load->driver('cache');
+			$this->cache->file->save('sesion_iniciada', $data['token'], 86400); // Caducidad en segundos (24 horas)
+
+			// Redireccionar a la página deseada
+			redirect('file'); // Cambia 'dashboard' por la página a la que deseas redirigir después del login
+		} else {
+			// Mostrar un mensaje de error en un alert
+			echo "<script>alert('Error al iniciar sesión');</script>";
+
+			// Redireccionar a la página de inicio de sesión en caso de error
+			redirect('login');
+		}
+	}
+
+	private function callRecognitionServer($email, $base64String)
+	{
+		// Construir la solicitud al servidor de reconocimiento facial
+		$url = 'http://localhost:8080/api/login_facial';
+		$headers = [
+			'Content-Type: application/json',
+			'Cookie: connect.sid=s%3AOGlshy_XEL2eMIUMP1hKbBXZn2q7Z9uQ.koXDzTU6MBafWZbKj7dnxA%2B%2FP%2BIOZDJ72%2B1vdNSZaW4',
+		];
+
+		$postData = json_encode([
+			'email' => $email,
+			'base64String' => $base64String,
+		]);
+
+		// Inicializar cURL
+		$ch = curl_init($url);
+
+		// Configurar opciones de cURL
+		curl_setopt($ch, CURLOPT_POST, 1);
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $postData);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+		// Ejecutar la solicitud cURL y obtener la respuesta
+		$response = curl_exec($ch);
+
+		// Cerrar la sesión cURL
+		curl_close($ch);
+
+		// Devolver la respuesta del servidor de reconocimiento facial
+		return $response;
+	}
+
 
 	public function google_login()
 	{
@@ -106,7 +173,10 @@ class Login extends CI_Controller
 					$this->cache->file->save('user_picture', $userPic, 86400);
 					// Almacenar el token en la cache
 					$this->load->driver('cache');
-					$this->cache->file->save('sesion_iniciada', $data['token'], 86400); // Caducidad en segundos (24 horas)														
+					$this->cache->file->save('sesion_iniciada', $data['token'], 86400); // Caducidad en segundos (24 horas)			
+
+					// Redireccionar a la página deseada
+					redirect('login/updateFacial_view'); // Cambia 'dashboard' por la página a la que deseas redirigir después del login
 				} else {
 					// Mostrar un mensaje de error en un alert
 					echo "<script>console.log('Error al iniciar sesión');</script>";
@@ -115,6 +185,54 @@ class Login extends CI_Controller
 			}
 		}
 	}
+
+	public function updateFacial_view()
+	{		
+		$this->load->view('update_facial');
+	}
+
+	public function updateFacial()
+	{
+		$email = $this->input->post('email');		
+		$imagenPerfil = $this->input->post('base64String');		
+
+		$curl = curl_init();
+
+		curl_setopt_array($curl, array(
+			CURLOPT_URL => 'http://localhost:8080/api/actualizar_facial',
+			CURLOPT_RETURNTRANSFER => true,
+			CURLOPT_ENCODING => '',
+			CURLOPT_MAXREDIRS => 10,
+			CURLOPT_TIMEOUT => 0,
+			CURLOPT_FOLLOWLOCATION => true,
+			CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+			CURLOPT_CUSTOMREQUEST => 'POST',
+			CURLOPT_POSTFIELDS => json_encode(array(
+			  'email' => $email,
+			  'nuevoBase64String' => $imagenPerfil
+			)),
+			CURLOPT_HTTPHEADER => array(
+			  'Content-Type: application/json',
+			  'Cookie: connect.sid=s%3A-rgVCGU5M0d1_y7k8khe6sEp0nsGcgj6.236xve0LEO7vh7t4nJwJlGcHqJmKgaQar9ZLocNF%2FX8'
+			),
+		  ));
+
+		$response = curl_exec($curl);
+
+		// Decodificar la respuesta JSON
+		$data = json_decode($response, true);
+
+		if (isset($data['message']) && $data['message'] == "Actualización exitosa") {
+			// Redireccionar a la página deseada
+			redirect('file'); // Cambia 'dashboard' por la página a la que deseas redirigir después del login
+		} else {
+			echo "<script>alert('Error al cambiar foto de perfil');</script>";
+		}
+
+		curl_close($curl);
+	}
+
+
 
 	// Función para realizar la consulta cURL
 	private function executeCurlRequest($url, $data)

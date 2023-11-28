@@ -29,12 +29,15 @@ class Registro extends CI_Controller
         $nombreUsuario = $this->input->post('nombreUsuario');
         $googleUserId = $this->input->post('googleUserId');
 
+        // Eliminar el prefijo
+        $base64String = str_replace("data:image/png;base64,", "", $imagenPerfil);
+
         // Crear arreglo de datos para la consulta cURL
         $postData = array(
             'tipoRegistro' => 'normal',
             'correo' => $correo,
             'contrasena' => $contrasena,
-            'imagenPerfil' => $imagenPerfil,
+            'imagenPerfil' => $base64String,
             'nombreCompleto' => $nombreCompleto,
             'fechaNacimiento' => $fechaNacimiento,
             'genero' => $genero,

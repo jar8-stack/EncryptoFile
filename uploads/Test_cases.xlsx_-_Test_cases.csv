@@ -1,0 +1,99 @@
+Requerimiento / HU,ID del caso de prueba dependiente,Descripción,Pasos a ejecutar ,Resultados esperados,Resultado de la prueba,Ambiente,Fecha de ejecución,Tipo de prueba,Desarrollador,Versión
+Registro de usuarios,1,Agregar un usuario,"1. Iniciar sesión en la aplicación
+2. Dar clic al menú Admin
+3. Dar clic al botón ""Agregar""
+4. Seleccionar un Rol
+5. Seleccionar Nombre
+6. Seleccionar un status
+7. Ingresar un password correcto
+8. Ingresar en el campo confirmar contraseña datos correctos
+9. Seleccionar el botón de Save","1) El sistema regresa una notificación de que el usuario se ha guardado correctamente
+2) El nuevo usuario se guarda en la base de datos en la tabla de usuarios y los datos se guardan en las columnas correspondientes",OK / Bug / Falla / No Ok,"Dev, Test, Prod",27-10-2023,,,
+Inicio de sesión en sistema,2,Iniciar sesión correctamente,"1. Acceder a el modulo de login en la siguiente URL https://opensource-demo.orangehrmlive.com/web/index.php/auth/login.
+2. Ingresar en el campo de username el usuario 'Admin'.
+3. Ingresar en el campo de password la contraseña 'admin123'.
+4. Presionar el boton de login.",El sistema muestra la pantalla de home,OK ,Test,04-11-2023,Pruebas de caja negra enfocado a pruebas modulares,Alejandra Kantun Chim,v1.0.0
+3,3,Inicio de sesión con contraseña incorrecta,"1. Abre el navegador web e ingresa la URL de inicio de sesión de la aplicación OrangeHRM.
+2. Ingresa el nombre de usuario válido en el campo ""Username"".
+3. Ingresa una contraseña incorrecta en el campo ""Password"".
+4. Haz clic en el botón ""Iniciar Sesión"" o ""Login"".","1) El sistema despliega un mensaje de error y no se inicia la sesión
+2) El sistema no inicia la sesión y envía a una pantalla para recuperar tu contraseña
+3) Se señala el campo de contraseña como incorrecto
+4) No se inicia sesión",OK,Test,04-11-2023,Pruebas de caja negra enfocado a pruebas modulares,Alejandra Kantun Chim,v1.0.0
+4,3,Inicio de sesión con usuario incorrecto,"Abre el navegador web e ingresa la URL de inicio de sesión de la aplicación OrangeHRM.
+Ingresa un nombre de usuario incorrecto en el campo ""Username"".
+Ingresa una contraseña válida en el campo ""Password"".
+Haz clic en el botón ""Iniciar Sesión"" o ""Login"".","1) El sistema despliega un mensaje de error y no se inicia la sesión
+2) El sistema no inicia la sesión y envía a una pantalla para recuperar tu contraseña
+3) Se señala el campo de contraseña como incorrecto
+4) No se inicia sesión",OK,Test,04-11-2023,Pruebas de caja negra enfocado a pruebas modulares,Alejandra Kantun Chim,v1.0.0
+5,3,Inicio de sesión con ambas credenciales incorrectas,"1. Abre el navegador web e ingresa la URL de inicio de sesión de la aplicación OrangeHRM.
+2. Ingresa un nombre de usuario incorrecto en el campo ""Username"".
+3. Ingresa una contraseña incorrecta en el campo ""Password"".
+4. Haz clic en el botón ""Iniciar Sesión"" o ""Login"".","1) El sistema despliega un mensaje de error y no se inicia la sesión
+2) El sistema no inicia la sesión y envía a una pantalla para recuperar tu contraseña
+3) Se señala el campo de contraseña como incorrecto
+4) No se inicia sesión",OK,Test,04-11-2023,Pruebas de caja negra enfocado a pruebas modulares,Alejandra Kantun Chim,v1.0.0
+6,3,Iniciar sesión sin credenciales,"1. Abre el navegador web e ingresa la URL de inicio de sesión de la aplicación OrangeHRM.
+2. Deja en blanco los campos ""Username"" y ""Password"".
+3. Haz clic en el botón ""Iniciar Sesión"" o ""Login"".","1) El sistema despliega un mensaje de error y no se inicia la sesión
+2) El sistema no inicia la sesión y envía a una pantalla para recuperar tu contraseña
+3) Se señala el campo de contraseña como incorrecto
+4) No se inicia sesión",OK,Test,04-11-2023,Pruebas de caja negra enfocado a pruebas modulares,Alejandra Kantun Chim,v1.0.0
+Resetear contraseña,1,Resetar contraseña exitosamente ,"1. Acceder al modulo de resetear contraseña mediante el hipervinculo de Forgot your password? en el modulo de inicio de sesion.
+2. En el campo de username insertar un usuario existente en el sistema es decir previamente registrado.
+3. Presionar el boton de Reset password.
+4. Observar que el modulo de resetear coontraseña devuelve el mensaje de envio de correo para reseteo de contraseña.","1) Me muestre el modulo de resetear contraseña.
+2) Que muestre el campo de username con el usuario insertado
+3) Que muestre el mensaje de que ya se envio un email con la liga de reseteo de contraseña.",OK,Test,04-11-2023,Pruebas de caja negra enfocado a pruebas modulares,Alejandra Kantun Chim,v1.0.0
+8,8,Recuperar Contraseña con Usuario Inexistente,"1. Iniciar sesión en la aplicación de OrangeHRM.
+2. Navegar a la opción ""Recuperar contraseña"".
+3. Ingresar un nombre de usuario inexistente en el campo ""Username"".
+4. Hacer clic en el botón ""Reset Password"" para enviar la solicitud de recuperación de contraseña.","1) El sistema debe mostrar un mensaje de error indicando que el nombre de usuario no existe, y no debe enviar un correo electrónico de recuperación.",Bug,Test,04-11-2023,Pruebas de caja negra enfocado a pruebas modulares,Alejandra Kantun Chim,v1.0.0
+8,9,Recuperar Contraseña con Campo de Username Vacío,"1. Iniciar sesión en la aplicación de OrangeHRM.
+2. Navegar a la opción ""Recuperar contraseña"".
+3. Deja el campo ""Username"" vacío.
+4. Hacer clic en el botón ""Reset Password"" para enviar la solicitud de recuperación de contraseña.","1) El sistema debe mostrar un mensaje de error indicando que el campo ""Username"" es obligatorio y no debe enviar un correo electrónico de recuperación.",OK,Test,04-11-2023,Pruebas de caja negra enfocado a pruebas modulares,Alejandra Kantun Chim,v1.0.0
+Crear un Nuevo Usuario,N/A,Crear un Nuevo Usuario exitoso,"1. Iniciar sesión en la aplicación OrangeHRM como administrador.
+2. Navegar a la sección ""System Users.""
+3. Seleccionar la opción para crear un nuevo usuario.
+4. Ingresar los datos requeridos para el nuevo usuario (nombre, apellido, nombre de usuario, contraseña, roles, etc.).
+5. Guardar el nuevo usuario.",1) El nuevo usuario se crea con éxito en la base de datos.,OK,Test,04-11-2023,Pruebas de caja negra enfocado a pruebas modulares,Alejandra Kantun Chim,v1.0.0
+ Modificar un Usuario Existente, Modificar un Usuario Existente exitosamente ,Verificar que se puedan realizar cambios en un usuario existente de manera correcta.,"1. Iniciar sesión en la aplicación OrangeHRM como administrador.
+2. Navegar a la sección ""System Users.""
+3. Seleccionar el usuario que se desea modificar.
+4. Realizar cambios en los datos del usuario, como roles, información de contacto, etc.
+5. Guardar los cambios.","1) Los cambios se aplican correctamente al usuario seleccionado, y los datos del usuario se actualizan en la base de datos.",OK,Test,04-11-2023,Pruebas de caja negra enfocado a pruebas modulares,Alejandra Kantun Chim,v1.0.0
+14,13,Modificar Roles de Usuario,"1. Iniciar sesión en la aplicación OrangeHRM como administrador.
+2. Navegar a la sección ""System Users.""
+3. Seleccionar el usuario que se desea modificar.
+4. Modificar los roles de usuario asignados al usuario.
+5. Guardar los cambios.",1) Los roles de usuario se modifican con éxito y se reflejan en el usuario seleccionado en la base de datos.,OK,Test,04-11-2023,Pruebas de caja negra enfocado a pruebas modulares,Alejandra Kantun Chim,v1.0.0
+Eliminar un Usuario Existente exitosamente,1,Verificar que se pueda eliminar un usuario existente de manera efectiva.,"1. Iniciar sesión en la aplicación OrangeHRM como administrador.
+2. Navegar a la sección ""System Users.""
+3. Seleccionar el usuario que se desea eliminar.
+4. Confirmar la eliminación del usuario.",1) El usuario seleccionado se elimina correctamente de la base de datos.,OK,Test,04-11-2023,Pruebas de caja negra enfocado a pruebas modulares,Alejandra Kantun Chim,v1.0.0
+17,16, Eliminar un Usuario Deshabilitado,"1. Iniciar sesión en la aplicación OrangeHRM como administrador.
+2. Navegar a la sección ""System Users.""
+3. Seleccionar un usuario que esté en estado ""Deshabilitado.""
+4. Confirmar la eliminación del usuario.","1) El usuario seleccionado en estado ""Deshabilitado"" se elimina correctamente de la base de datos.",OK,Test,04-11-2023,Pruebas de caja negra enfocado a pruebas modulares,Alejandra Kantun Chim,v1.0.0
+18,16,Cancelar la Eliminación de un Usuario,"1. Iniciar sesión en la aplicación OrangeHRM como administrador.
+2. Navegar a la sección ""System Users.""
+3. Seleccionar el usuario que se desea eliminar.
+4. Cancelar la eliminación del usuario en el último paso de confirmación.","1) El usuario no se elimina, y el proceso de eliminación se cancela con éxito.",OK,Test,04-11-2023,Pruebas de caja negra enfocado a pruebas modulares,Alejandra Kantun Chim,v1.0.0
+Buscar Usuarios por Nombre de Usuario (Username),N/A,Verificar que se pueda buscar usuarios por nombre de usuario utilizando el filtro de búsqueda.,"1. Iniciar sesión en la aplicación OrangeHRM como administrador.
+2. Navegar a la sección ""System Users.""
+3. Ingresar un nombre de usuario válido en el filtro de búsqueda de ""Username.""
+4. Hacer clic en el botón de búsqueda.",1) La búsqueda devuelve una lista de usuarios que coinciden con el nombre de usuario especificado.,OK,Test,04-11-2023,Pruebas de caja negra enfocado a pruebas modulares,Alejandra Kantun Chim,v1.0.0
+Buscar Usuarios por Rol de Usuario (User role),N/A,Verificar que se pueda buscar usuarios por su rol de usuario utilizando el filtro de búsqueda.,"1. Iniciar sesión en la aplicación OrangeHRM como administrador.
+2. Navegar a la sección ""System Users.""
+3. Seleccionar un rol de usuario (por ejemplo, ""Admin"" o ""ESS"") en el filtro de búsqueda de ""User role.""
+4. Hacer clic en el botón de búsqueda.",1) La búsqueda devuelve una lista de usuarios que tienen el rol de usuario especificado.,OK,Test,04-11-2023,Pruebas de caja negra enfocado a pruebas modulares,Alejandra Kantun Chim,v1.0.0
+Buscar Usuarios por Nombre de Empleado (Employee Name),N/A,Verificar que se pueda buscar usuarios por nombre de empleado utilizando el filtro de búsqueda.,"1. Iniciar sesión en la aplicación OrangeHRM como administrador.
+2. Navegar a la sección ""System Users.""
+3. Ingresar un nombre de empleado válido en el filtro de búsqueda de ""Employee Name.""
+4. Hacer clic en el botón de búsqueda.",1) La búsqueda devuelve una lista de usuarios cuyos nombres de empleado coinciden con el valor especificado.,OK,Test,04-11-2023,Pruebas de caja negra enfocado a pruebas modulares,Alejandra Kantun Chim,v1.0.0
+Buscar Usuarios por Estado (Status),N/A,Verificar que se pueda buscar usuarios por su estado (Habilitado o Deshabilitado) utilizando el filtro de búsqueda.,"1. Iniciar sesión en la aplicación OrangeHRM como administrador.
+2. Navegar a la sección ""System Users.""
+3. Seleccionar un estado (por ejemplo, ""Enabled"" o ""Disabled"") en el filtro de búsqueda de ""Status.""
+4. Hacer clic en el botón de búsqueda.",1) La búsqueda devuelve una lista de usuarios que tienen el estado especificado (habilitado o deshabilitado).,OK,Test,04-11-2023,Pruebas de caja negra enfocado a pruebas modulares,Alejandra Kantun Chim,v1.0.0
