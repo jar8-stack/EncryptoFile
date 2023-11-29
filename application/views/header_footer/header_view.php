@@ -6681,9 +6681,7 @@
                                                 $bytesArray = $this->cache->file->get('user_picture_normal');
 
                                                 // Convertir el byte array a una cadena UTF-8                                                
-                                                $byteString = implode(array_map("chr", $bytesArray));
-
-                                                echo substr($byteString, -3);
+                                                $byteString = implode(array_map("chr", $bytesArray));                                                
 
                                                 // Obtener el nombre del usuario del caché
                                                 $name = $this->cache->file->get('name_normal');
