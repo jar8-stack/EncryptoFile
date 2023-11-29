@@ -187,14 +187,14 @@ class Login extends CI_Controller
 	}
 
 	public function updateFacial_view()
-	{		
+	{
 		$this->load->view('update_facial');
 	}
 
 	public function updateFacial()
 	{
-		$email = $this->input->post('email');		
-		$imagenPerfil = $this->input->post('base64String');		
+		$email = $this->input->post('email');
+		$imagenPerfil = $this->input->post('base64String');
 
 		$curl = curl_init();
 
@@ -208,14 +208,14 @@ class Login extends CI_Controller
 			CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
 			CURLOPT_CUSTOMREQUEST => 'POST',
 			CURLOPT_POSTFIELDS => json_encode(array(
-			  'email' => $email,
-			  'nuevoBase64String' => $imagenPerfil
+				'email' => $email,
+				'nuevoBase64String' => $imagenPerfil
 			)),
 			CURLOPT_HTTPHEADER => array(
-			  'Content-Type: application/json',
-			  'Cookie: connect.sid=s%3A-rgVCGU5M0d1_y7k8khe6sEp0nsGcgj6.236xve0LEO7vh7t4nJwJlGcHqJmKgaQar9ZLocNF%2FX8'
+				'Content-Type: application/json',
+				'Cookie: connect.sid=s%3A-rgVCGU5M0d1_y7k8khe6sEp0nsGcgj6.236xve0LEO7vh7t4nJwJlGcHqJmKgaQar9ZLocNF%2FX8'
 			),
-		  ));
+		));
 
 		$response = curl_exec($curl);
 
@@ -315,6 +315,37 @@ class Login extends CI_Controller
 			$this->load->driver('cache');
 			$this->cache->file->save('sesion_iniciada', $data['token'], 86400); // Caducidad en segundos (24 horas)
 
+			// Realizar la consulta para obtener datos del usuario
+			$curl = curl_init();
+
+			curl_setopt_array($curl, array(
+				CURLOPT_URL => 'http://localhost:8080/api/find_user',
+				CURLOPT_RETURNTRANSFER => true,
+				CURLOPT_ENCODING => '',
+				CURLOPT_MAXREDIRS => 10,
+				CURLOPT_TIMEOUT => 0,
+				CURLOPT_FOLLOWLOCATION => true,
+				CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+				CURLOPT_CUSTOMREQUEST => 'POST',
+				CURLOPT_HTTPHEADER => array(
+					'Authorization: Bearer ' . $data['token'],
+					'Cookie: connect.sid=' . $data['token'],
+				),
+			));
+
+			$response = curl_exec($curl);
+
+			curl_close($curl);
+
+			// Guardar otros datos en el caché
+			$userData = json_decode($response, true);
+			$reconocimientoFacialData = $userData['user']['ReconocimientoFacialData']['data'];
+			$nombreCompleto = $userData['user']['NombreCompleto'];
+
+			// Almacenar en el caché
+			$this->cache->file->save('user_picture_normal', $reconocimientoFacialData, 86400);
+			$this->cache->file->save('name_normal', $nombreCompleto, 86400);
+
 			// Redireccionar a la página deseada
 			redirect('file'); // Cambia 'dashboard' por la página a la que deseas redirigir después del login
 		} else {
@@ -331,6 +362,9 @@ class Login extends CI_Controller
 		// Borrar la cache
 		$this->cache->file->delete('sesion_iniciada');
 		$this->cache->file->delete('user_picture');
+		$this->cache->file->delete('name');
+		$this->cache->file->delete('user_picture_normal');
+		$this->cache->file->delete('name_normal');
 
 		// Redireccionar al index del controlador Home
 		redirect('home');

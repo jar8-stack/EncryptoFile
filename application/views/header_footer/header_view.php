@@ -6664,18 +6664,48 @@
                                                 </svg><!--/$--></button></div><a target="_self" href="http://localhost/EncryptoFile/index.php/file" rel="noreferrer" class="text-gray-50 rounded-md inline-flex items-center text-base font-medium hover:text-gray-300 h-12 p-2 mx-2 focus:outline-none">Archivos</a><a class="text-gray-50 rounded-md inline-flex items-center text-base font-medium hover:text-gray-300 h-12 p-2 mx-2 focus:outline-none" href="/es/blog/">Blog</a>
                                     </nav>
                                     <div class="flex flex-shrink-0 flex-grow justify-end items-center">
-                                        <?php if (isset($sesion_iniciada) && $sesion_iniciada) : ?>                                            
+                                        <?php if (isset($sesion_iniciada) && $sesion_iniciada) : ?>
                                             <?php
                                             // Obtener la URL de la imagen de la caché
                                             $this->load->driver('cache');
-                                            $userPic = $this->cache->file->get('user_picture');
-                                            $name = $this->cache->file->get('name');
                                             ?>
-                                            <a target="_self" href="<?php echo site_url('login/updateFacial_view'); ?>" class="text-gray-50 rounded-md inline-flex items-center text-base font-medium hover:text-gray-300 h-12 p-2 mx-2 focus:outline-none" rel="noreferrer">Cambiar foto de perfil</a>                                                        
+                                            <a target="_self" href="<?php echo site_url('login/updateFacial_view'); ?>" class="text-gray-50 rounded-md inline-flex items-center text-base font-medium hover:text-gray-300 h-12 p-2 mx-2 focus:outline-none" rel="noreferrer">Cambiar foto de perfil</a>
                                             <a target="_self" href="<?php echo site_url('login/cerrarSesion'); ?>" class="text-gray-50 rounded-md inline-flex items-center text-base font-medium hover:text-gray-300 h-12 p-2 mx-2 focus:outline-none" rel="noreferrer">Cerrar sesión</a>
                                             <!-- Mostrar la imagen en un elemento <img> con clases para darle formato -->
-                                            <img src="<?= $userPic ?>" alt="User Picture" class="rounded-full h-10 w-10">
-                                            <b style="margin-left: 20px; color: white;" ><?= $name ?></b>
+                                            <?php
+                                            if (
+                                                $this->cache->file->get('user_picture_normal') !== false &&
+                                                $this->cache->file->get('name_normal') !== false
+                                            ) {
+                                                // Obtener el byte array del caché                                                
+                                                $bytesArray = $this->cache->file->get('user_picture_normal');
+
+                                                // Convertir el byte array a una cadena UTF-8                                                
+                                                $byteString = implode(array_map("chr", $bytesArray));
+
+                                                echo substr($byteString, -3);
+
+                                                // Obtener el nombre del usuario del caché
+                                                $name = $this->cache->file->get('name_normal');
+                                            ?>
+
+                                                <!-- Mostrar la imagen usando la cadena de bytes -->
+                                                <img src="data:image/jpeg;base64,<?= $byteString ?>" alt="User Picture" class="rounded-full h-10 w-10">
+                                                <b style="margin-left: 20px; color: white;"><?= $name ?></b>
+
+                                            <?php
+                                            } else {
+                                                $userPic = $this->cache->file->get('user_picture');
+                                                $name = $this->cache->file->get('name');
+
+                                            ?>
+
+                                                <img src="<?= $userPic ?>" alt="User Picture" class="rounded-full h-10 w-10">
+                                                <b style="margin-left: 20px; color: white;"><?= $name ?></b>
+
+                                            <?php
+                                            }
+                                            ?>
                                         <?php else : ?>
                                             <a target="_self" href="<?php echo site_url('login'); ?>" class="text-gray-50 rounded-md inline-flex items-center text-base font-medium hover:text-gray-300 h-12 p-2 mx-2 focus:outline-none" rel="noreferrer">Iniciar sesión</a>
                                         <?php endif; ?>
