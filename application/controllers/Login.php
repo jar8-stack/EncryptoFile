@@ -43,6 +43,8 @@ class Login extends CI_Controller
 			$this->load->driver('cache');
 			$this->cache->file->save('sesion_iniciada', $data['token'], 86400); // Caducidad en segundos (24 horas)
 
+			echo $data['token'];
+
 			// Realizar la consulta para obtener datos del usuario
 			$curl = curl_init();
 
