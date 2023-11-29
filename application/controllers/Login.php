@@ -63,14 +63,10 @@ class Login extends CI_Controller
 
 			$response = curl_exec($curl);
 
-			echo json_encode($response);
-
-			
+			curl_close($curl);
 
 			// Guardar otros datos en el caché
 			$userData = json_decode($response, true);
-
-			curl_close($curl);
 			$reconocimientoFacialData = $userData['user']['ReconocimientoFacialData']['data'];
 			$nombreCompleto = $userData['user']['NombreCompleto'];
 
