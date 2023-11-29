@@ -43,6 +43,37 @@ class Login extends CI_Controller
 			$this->load->driver('cache');
 			$this->cache->file->save('sesion_iniciada', $data['token'], 86400); // Caducidad en segundos (24 horas)
 
+			// Realizar la consulta para obtener datos del usuario
+			$curl = curl_init();
+
+			curl_setopt_array($curl, array(
+				CURLOPT_URL => 'http://localhost:8080/api/find_user',
+				CURLOPT_RETURNTRANSFER => true,
+				CURLOPT_ENCODING => '',
+				CURLOPT_MAXREDIRS => 10,
+				CURLOPT_TIMEOUT => 0,
+				CURLOPT_FOLLOWLOCATION => true,
+				CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+				CURLOPT_CUSTOMREQUEST => 'POST',
+				CURLOPT_HTTPHEADER => array(
+					'Authorization: Bearer ' . $data['token'],
+					'Cookie: connect.sid=' . $data['token'],
+				),
+			));
+
+			$response = curl_exec($curl);
+
+			curl_close($curl);
+
+			// Guardar otros datos en el caché
+			$userData = json_decode($response, true);
+			$reconocimientoFacialData = $userData['user']['ReconocimientoFacialData']['data'];
+			$nombreCompleto = $userData['user']['NombreCompleto'];
+
+			// Almacenar en el caché
+			$this->cache->file->save('user_picture_normal', $reconocimientoFacialData, 86400);
+			$this->cache->file->save('name_normal', $nombreCompleto, 86400);
+
 			// Redireccionar a la página deseada
 			redirect('file'); // Cambia 'dashboard' por la página a la que deseas redirigir después del login
 		} else {
