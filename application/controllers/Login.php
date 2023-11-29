@@ -63,6 +63,8 @@ class Login extends CI_Controller
 
 			$response = curl_exec($curl);
 
+			echo json_encode($response);
+
 			
 
 			// Guardar otros datos en el caché
