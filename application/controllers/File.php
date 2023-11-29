@@ -87,9 +87,7 @@ class File extends CI_Controller
                 $fileContent = file_get_contents($file_info['full_path']);
 
                 // Convierte la cadena a un arreglo de bytes
-                $bytesArray = unpack('C*', $fileContent);
-
-                echo json_encode($bytesArray);
+                $bytesArray = unpack('C*', $fileContent);                
 
                 // Supongamos que $bytesArray es el arreglo de bytes que obtuviste
                 $base64String = base64_encode(implode(array_map("chr", $bytesArray)));
